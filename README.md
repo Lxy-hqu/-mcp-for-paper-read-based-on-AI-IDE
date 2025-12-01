@@ -21,8 +21,8 @@
 
 ### 1. 克隆仓库
 ```bash
-git clone https://github.com/Lxy-hqu/-mcp-.git
-cd -mcp-
+git clone https://github.com/Lxy-hqu/-mcp-for-paper-read-based-on-AI-IDE.git
+cd -mcp-for-paper-read-based-on-AI-IDE
 ```
 
 ### 2. 安装依赖
@@ -48,7 +48,7 @@ npx tsc
     "local-papers": {
       "command": "C:\\Program Files\\nodejs\\node.exe", 
       "args": [
-        "E:\\path\\to\\-mcp-\\dist\\server.js"
+        "E:\\path\\to\\-mcp-for-paper-read-based-on-AI-IDE\\dist\\server.js"
       ],
       "disabled": false,
       "autoApprove": []
