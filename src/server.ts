@@ -11,6 +11,7 @@ import { summarizer } from "./providers/summarizer.js";
 import { mathExplainer } from "./providers/math_explainer.js";
 import { codeGenerator } from "./providers/code_generator.js";
 import { visualization } from "./providers/visualization.js";
+import { reportGenerator } from "./providers/report_generator.js";
 
 // Registry
 const tools = [
@@ -19,7 +20,8 @@ const tools = [
   summarizer, 
   mathExplainer,
   codeGenerator,
-  visualization
+  visualization,
+  reportGenerator
 ];
 
 const server = new Server(
