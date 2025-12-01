@@ -8,7 +8,11 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "0.6.0",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/mathjs": "^9.4.1",
+    "better-sqlite3": "^12.5.0",
     "fs-extra": "^11.2.0",
+    "mathjs": "^15.1.0",
     "pdf-parse": "^1.1.1"
   },
   "devDependencies": {

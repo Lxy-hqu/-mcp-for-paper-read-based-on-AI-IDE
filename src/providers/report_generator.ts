@@ -44,9 +44,13 @@ export const reportGenerator = {
     const structRes = await structureParser.handler({ text: fullText });
     const sections = JSON.parse(structRes.content[0].text);
     
-    // Summarizer
-    const summaryRes = await summarizer.handler({ text: fullText, mode: "bullet" });
+    // Summarizer - General
+    const summaryRes = await summarizer.handler({ text: fullText, mode: "summary" });
     const summary = summaryRes.content[0].text;
+
+    // Summarizer - Methodology
+    const methodRes = await summarizer.handler({ text: fullText, mode: "methodology" });
+    const methodSummary = methodRes.content[0].text;
 
     // Math Explainer (Extract from Method section if possible, else full text)
     const methodText = sections["Method"] || sections["Introduction"] || fullText.slice(0, 2000);
@@ -73,18 +77,23 @@ export const reportGenerator = {
 
 ---
 
-## 1. Summary
+## 1. Intelligent Summary
 ${summary}
 
 ---
 
-## 2. Structure Analysis
+## 2. Methodology Overview
+${methodSummary}
+
+---
+
+## 3. Structure Analysis
 The paper is structured into the following detected sections:
 ${Object.keys(sections).map(k => `- **${k}**: ${sections[k].slice(0, 100).replace(/\n/g, " ")}...`).join("\n")}
 
 ---
 
-## 3. Mathematical Analysis
+## 4. Mathematical Analysis
 **Key Variables & Formulas**
 > Note: Formulas are extracted and rendered. Complex PDF math may require verification.
 
@@ -99,14 +108,14 @@ $$
 
 ---
 
-## 4. Visualization (Mermaid)
+## 5. Visualization (Mermaid)
 \`\`\`mermaid
 ${mermaidCode}
 \`\`\`
 
 ---
 
-## 5. Experiment Configuration (Generated)
+## 6. Experiment Configuration (Generated)
 Based on the extracted parameters, here is a suggested configuration:
 
 \`\`\`yaml
