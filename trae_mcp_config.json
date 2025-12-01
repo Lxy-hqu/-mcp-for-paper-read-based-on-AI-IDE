@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "local-papers": {
+      "command": "c:\\Users\\xuyang\\.trae\\sdks\\versions\\node\\current\\node.exe",
+      "args": [
+        "e:\\pp_read\\mcp-server\\dist\\server.js"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}

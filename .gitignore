@@ -1,0 +1,7 @@
+# .gitignore
+node_modules/
+dist/
+papers.db
+papers.db-journal
+*.log
+.DS_Store

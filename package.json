@@ -1,0 +1,19 @@
+{
+  "name": "mcp-local-papers",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/server.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "0.6.0",
+    "fs-extra": "^11.2.0",
+    "pdf-parse": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.0.0",
+    "typescript": "^5.6.0"
+  }
+}
