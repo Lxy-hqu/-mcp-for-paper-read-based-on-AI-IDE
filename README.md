@@ -62,7 +62,23 @@ npx tsc
 重启 Trae 后，在 MCP 管理面板中应显示 `local-papers` 为 **Connected** 状态。
 你可以尝试在对话框中输入：“请使用 `pdf_loader` 读取这个文件：`E:\my_paper.pdf`” 来测试。
 
-## 📝 使用指南
+## � 迁移与多机部署
+
+如果你想在另一台机器上运行此服务，有两种方式：
+
+### 方式一：直接复制目录（便携式）
+你可以直接将整个目录（包含 `dist` 和 `node_modules`）复制到新机器。
+**注意事项：**
+1. **Node.js 环境**：新机器必须安装 [Node.js](https://nodejs.org/)。
+2. **操作系统一致性**：如果你从 Windows 复制到 macOS/Linux，可能会因为 `better-sqlite3` 等原生依赖不兼容而报错。此时需要在新机器运行 `npm rebuild` 或删除 `node_modules` 重新 `npm install`。
+3. **路径配置**：在 Trae 的 `settings.json` 中，**必须修改** `command` (Node 路径) 和 `args` (server.js 路径) 为新机器上的实际绝对路径。
+
+### 方式二：重新克隆（推荐）
+在每台新机器上重新执行 `git clone`、`npm install` 和 `npx tsc`。这是最稳健的方法，能确保所有依赖与当前系统完美兼容。
+
+> ⚠️ **关于数据隐私**：`papers.db` 文件存储了已解析的论文数据。直接复制目录会带走此数据库。如果在新机器上需要干净的环境，请删除 `papers.db` 文件。
+
+## �📝 使用指南
 
 ### 数学公式解析
 > "解析这篇论文的数学公式，并将符号定义存入数据库。"
