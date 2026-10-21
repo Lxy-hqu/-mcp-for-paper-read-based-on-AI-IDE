@@ -1,0 +1,35 @@
+name: Skill tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.12']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install PDF test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          python -m pip install reportlab pypdf
+      - name: Run behavior tests
+        run: python -m unittest discover -s tests -v
+      - name: Check public documentation
+        run: python tools/check_docs.py
+      - name: Check isolated install and package
+        run: |
+          python tools/install_skill.py --codex-home ./validation/codex-home
+          python tools/final_audit.py

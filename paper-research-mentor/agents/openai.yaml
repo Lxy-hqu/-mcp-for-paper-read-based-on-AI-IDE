@@ -1,0 +1,6 @@
+interface:
+  display_name: "论文深读与研究共创"
+  short_description: "循证精读论文、解析公式实验、提炼写作模板，并共创可验证的项目方法建议"
+  default_prompt: "使用 $paper-research-mentor 深入阅读这些论文，保存可追溯的分析、写作素材和方法建议，并帮助我独立判断与迁移。"
+policy:
+  allow_implicit_invocation: true

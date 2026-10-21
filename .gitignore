@@ -5,3 +5,17 @@ papers.db
 papers.db-journal
 *.log
 .DS_Store
+
+# Skill runtime, local reading material and generated verification records
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+/validation/
+/paper-reading/
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+.env
+.env.*

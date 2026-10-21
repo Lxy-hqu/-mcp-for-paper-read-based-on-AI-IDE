@@ -1,113 +1,151 @@
-# 科研论文辅助阅读 MCP 系统（本地版）
+<p align="center">
+  <img src="docs/assets/hero.png" alt="Paper Research Mentor: an annotated paper becomes connected evidence, independent questions, and experimental ideas" width="100%" />
+</p>
 
-本系统基于 MCP (Model Context Protocol) 构建，提供本地 PDF 解析、结构化提取、数学公式深度解析、代码生成与可视化功能。
-所有计算均在本地运行，支持通过 Trae 内置大模型或本地 LLM 进行增强。
+<h1 align="center">Paper Research Mentor</h1>
 
-## ✨ 功能亮点
+<p align="center"><strong>Read deeply. Think independently. Build with evidence.</strong></p>
 
-- **� 智能摘要与方法论**：`summarizer` 支持智能摘要与方法论提取，可自动连接本地 LLM (Ollama) 进行深度内容理解。
-- **🔢 深度数学智能**：`math_explainer` 提取公式、构建 AST（抽象语法树），并存入本地 SQLite 数据库。
-- **💻 实验复现辅助**：`code_generator` 自动从论文中提取超参数，生成 PyTorch 模型定义与训练脚本。
-- **📊 可视化图表**：`visualization` 生成 Mermaid 流程图与变量依赖图。
-- **📑 智能报告生成**：`report_generator` 自动生成 Markdown 格式的论文分析报告，包含摘要、结构、可视化图表与代码配置，并确保数学公式正确渲染。
-- **🧠 知识管理**：本地数据库 `papers.db` 自动存储论文元数据、符号定义与实验记录。
+<p align="center">
+  A Codex skill for deep paper reading, reusable academic writing, and research ideas you can actually test.<br />
+  From one paper to a body of literature—with the researcher involved in the reasoning.
+</p>
 
-## 🛠️ 部署与安装
+<p align="center">
+  <a href="https://github.com/Lxy-hqu/-mcp-for-paper-read-based-on-AI-IDE/actions/workflows/skill-tests.yml"><img src="https://github.com/Lxy-hqu/-mcp-for-paper-read-based-on-AI-IDE/actions/workflows/skill-tests.yml/badge.svg" alt="Skill tests" /></a>
+  <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB" alt="Python 3.10 or newer" />
+  <img src="https://img.shields.io/badge/storage-SQLite-0F766E" alt="SQLite storage" />
+</p>
 
-### 前置要求
-- Node.js (v16+)
-- Git
-- (可选) [Ollama](https://ollama.com/) 用于本地大模型加速 (默认端口 11434)
+<p align="center">
+  <a href="README.zh-CN.md">简体中文</a> ·
+  <a href="#quick-start">Quick start</a> ·
+  <a href="docs/usage.md">Usage guide</a> ·
+  <a href="docs/example.md">Reading example</a> ·
+  <a href="docs/mcp-guide.md">Legacy MCP</a>
+</p>
 
-### 1. 克隆仓库
+## A paper should leave you with better questions
+
+Paper Research Mentor turns a paper into an explanation of **what was proposed, how it works, what the evidence supports, and how to test a useful idea in your own project**.
+
+Codex does the reading and analysis. Small local scripts preserve page locations, store evidence, check references, and keep discussion history. The skill connects those pieces into a repeatable research workflow.
+
+**Two outcomes stay separate: a finished analysis and demonstrated understanding.** If the reader has not answered a thinking prompt, their understanding stays unverified. The skill examines ideas, competing explanations, and failure conditions without treating agreement as learning.
+
+## What you get
+
+| Output | What makes it useful |
+|---|---|
+| **A connected deep read** | Rebuild the problem → hypothesis → design → experiment → conclusion, with academic and plain-language explanations. |
+| **Equations you can reason through** | Symbols, shapes, assumptions, intermediate steps, toy examples, and explicit parsing limits. |
+| **An evidence map** | Link central claims to PDF pages, figures, tables, or equations; distinguish observations from interpretations. |
+| **A writing toolkit** | Extract domain terms, useful collocations, sentence patterns, and paragraph structures with conditions for reuse. |
+| **Project method suggestions** | Compare your baseline, a small adaptation, and a larger exploration; specify controls, metrics, cost, and stopping criteria. |
+| **A literature synthesis** | Compare assumptions and experimental conditions across papers; keep genuine disagreements visible. |
+| **A research discussion** | Predict, explain, challenge, revise. Preserve the reader's actual answers and the help they received. |
+| **Reusable local records** | Search, resume, add later sources, and export SQLite-backed records to Markdown and JSON. |
+
+The workflow adapts to theoretical, empirical, engineering, and machine-learning papers. Code and training materials are produced when applicable; other disciplines are not forced into a neural-network template.
+
+## Quick start
+
+Requires **Python 3.10+** and a Codex environment with local file/tool access. Git is needed for the clone command. The skill does not require the old MCP server, Node.js, Ollama, or a separate model API key.
+
 ```bash
-git clone https://github.com/Lxy-hqu/-mcp-for-paper-read-based-on-AI-IDE.git
-cd -mcp-for-paper-read-based-on-AI-IDE
+git clone https://github.com/Lxy-hqu/-mcp-for-paper-read-based-on-AI-IDE.git paper-research-mentor
+cd paper-research-mentor
+python tools/install_skill.py
 ```
 
-### 2. 安装依赖
-```bash
-npm install
+The installer copies the skill to `$CODEX_HOME/skills/paper-research-mentor`, or `~/.codex/skills/paper-research-mentor` when `CODEX_HOME` is unset. It verifies file hashes, preserves a different existing version as a backup, and builds a clean skill ZIP under `dist/`.
+
+Attach a paper in Codex and ask:
+
+```text
+Use $paper-research-mentor to deeply read this paper.
+Save a source-linked analysis, explain the key equations and experiments,
+extract reusable writing patterns, and discuss the most consequential ideas with me.
 ```
 
-### 3. 编译项目
-```bash
-npx tsc
+For an automated first pass:
+
+```text
+Use $paper-research-mentor to complete the analysis without asking me questions.
+Save the thinking prompts separately. Leave my understanding unverified.
 ```
 
-### 4. 配置 Trae (或 Cursor)
+The skill allows automatic matching for relevant reading requests; naming it explicitly selects the intended workflow. If it is not listed after installation, reopen the chat or restart Codex.
 
-#### 自动配置 (推荐)
-本仓库包含一个 `trae_mcp_config.json` 模板。你需要将其中的 `command` 路径修改为你本地 Node.js 的**绝对路径**，`args` 修改为 `server.js` 的**绝对路径**。
+**[Full installation, dependency, and usage instructions →](docs/usage.md)**
 
-**Windows 用户示例配置：**
-打开 Trae 设置 -> MCP Servers -> Edit in settings.json：
-```json
-{
-  "mcpServers": {
-    "local-papers": {
-      "command": "C:\\Program Files\\nodejs\\node.exe", 
-      "args": [
-        "E:\\path\\to\\-mcp-for-paper-read-based-on-AI-IDE\\dist\\server.js"
-      ],
-      "disabled": false,
-      "autoApprove": []
-    }
-  }
-}
-```
-> 💡 提示：在终端运行 `where node` 可获取 Node.js 的安装路径。
+## The workflow
 
-### 5. 验证运行
-重启 Trae 后，在 MCP 管理面板中应显示 `local-papers` 为 **Connected** 状态。
-你可以尝试在对话框中输入：“请使用 `pdf_loader` 读取这个文件：`E:\my_paper.pdf`” 来测试。
-
-## � 迁移与多机部署
-
-如果你想在另一台机器上运行此服务，有两种方式：
-
-### 方式一：直接复制目录（便携式）
-你可以直接将整个目录（包含 `dist` 和 `node_modules`）复制到新机器。
-**注意事项：**
-1. **Node.js 环境**：新机器必须安装 [Node.js](https://nodejs.org/)。
-2. **操作系统一致性**：如果你从 Windows 复制到 macOS/Linux，可能会因为 `better-sqlite3` 等原生依赖不兼容而报错。此时需要在新机器运行 `npm rebuild` 或删除 `node_modules` 重新 `npm install`。
-3. **路径配置**：在 Trae 的 `settings.json` 中，**必须修改** `command` (Node 路径) 和 `args` (server.js 路径) 为新机器上的实际绝对路径。
-
-### 方式二：重新克隆（推荐）
-在每台新机器上重新执行 `git clone`、`npm install` 和 `npx tsc`。这是最稳健的方法，能确保所有依赖与当前系统完美兼容。
-
-> ⚠️ **关于数据隐私**：`papers.db` 文件存储了已解析的论文数据。直接复制目录会带走此数据库。如果在新机器上需要干净的环境，请删除 `papers.db` 文件。
-
-## �📝 使用指南
-
-### 数学公式解析
-> "解析这篇论文的数学公式，并将符号定义存入数据库。"
-
-### 代码生成
-> "根据这篇论文的方法部分，生成 PyTorch 模型代码，并提取超参数。"
-
-### 可视化
-> "为这篇论文的模型结构生成一个 Mermaid 流程图。"
-
-### 生成分析报告
-> "为这篇论文生成一份完整的 Markdown 分析报告。"
-
-## 📂 项目结构
-```
-src/
-├── providers/          # 核心功能模块
-│   ├── pdf_loader.ts      # PDF 读取
-│   ├── structure_parser.ts # 结构化切分
-│   ├── math_explainer.ts   # 数学解析 & AST
-│   ├── code_generator.ts   # 代码 & Config 生成
-│   ├── visualization.ts    # Mermaid 图表生成
-│   ├── report_generator.ts # 报告生成
-│   └── summarizer.ts       # 智能摘要与方法论
-├── database.ts         # SQLite 数据库管理
-├── llm_client.ts       # 本地 LLM 连接客户端
-├── server.ts           # MCP 服务器入口
-└── types.d.ts          # 类型定义
+```mermaid
+flowchart LR
+    A[Paper or corpus] --> B[Pages and source evidence]
+    B --> C[Mechanisms and scientific critique]
+    C --> D[Writing patterns and testable ideas]
+    D --> E[Research discussion]
+    E --> F[Recorded understanding and open questions]
 ```
 
-## 📄 License
-MIT
+Independent analysis continues while learning prompts await a response. A reader may skip a question or request a direct explanation. Answer exposure and hints are recorded; they do not silently become independent mastery.
+
+### Try a project question
+
+```text
+Use $paper-research-mentor to compare these papers against the README,
+dataset description, and experiment configuration in my current project.
+Compare keeping the baseline, a low-cost adaptation, and a larger exploration.
+For each idea, propose the smallest experiment that could disprove it.
+```
+
+If no project context is available, suggestions remain conditional. Reading a paper does not automatically authorize editing the project or launching training.
+
+## A concrete example
+
+The reading demonstration uses *Attention Is All You Need*, arXiv v7:
+
+- It keeps the **41.8 in Table 2 vs. 41.0 in the same page's prose** as an unresolved source inconsistency.
+- It distinguishes parallel training from autoregressive generation.
+- It treats attention visualizations as illustrative evidence, rather than proof of causal explanations.
+- It leaves all unanswered learning checkpoints **pending / unverified**.
+
+**[Read the example and its source locations →](docs/example.md)**
+
+The example includes source locations and an explicit record of what was checked.
+
+## Designed to keep scientific boundaries visible
+
+- **Source first:** central claims, numerical results, formulas, and writing patterns need resolvable evidence.
+- **Unknown stays unknown:** missing hyperparameters and project facts are not replaced with customary defaults.
+- **Reproduction has levels:** a code skeleton, a numerical smoke test, and a reproduced scientific result are different states.
+- **Comparisons need conditions:** different datasets, splits, metrics, or budgets are not a universal leaderboard.
+- **Data stays out of the skill package:** papers, reading databases, private context, and machine-specific manifests are excluded.
+
+PDF extraction and storage can run locally. That does not imply the Codex model runs offline or that material sent to the host model remains on the computer.
+
+## Validation
+
+The recorded full local test run passes **36 automated tests**, supplemented by a full-paper reading demonstration and an independent forward review. Tests exercise provenance checks, metadata corrections, version handling, discussion-state constraints, later-source attachment, exports, and installation.
+
+Real OCR accuracy, the optional installed-SymPy branch, real Ollama inference, and full WMT/BLEU reproduction have not been validated in that recorded run. Actual human learning outcomes have not been measured.
+
+**[Validation scope and reproducible commands →](docs/validation.md)**
+
+## Repository map
+
+```text
+paper-research-mentor/   Installable skill: instructions, references, scripts, template
+tools/                  Installer and package audit
+tests/                  Behavioral regression tests
+docs/                   Usage, examples, validation, and MCP compatibility
+src/                    Original TypeScript MCP implementation
+```
+
+This project grew from an MCP for AI-powered IDEs. **The original MCP remains available**; Codex users can use the skill directly. See the [compatibility guide](docs/mcp-guide.md) for setup and known implementation limits.
+
+## Contributing
+
+Useful contributions include difficult paper layouts, failures in evidence handling, better disciplinary reading guidance, and concrete examples where an explanation or transfer suggestion overreaches its evidence. See [CONTRIBUTING.md](CONTRIBUTING.md) for a small, reproducible workflow.
